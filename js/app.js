@@ -58,24 +58,30 @@ const EditShow = (url,id) =>{
         
         AddSubmitInput2.addEventListener("click",(e) =>{
             e.preventDefault()
-            axios.get(url + "/" + id).then(({data}) =>{
+            if(AddUserInp2.value.length > 0 && AddSurNameInp2.value.length > 0 && AddEmailInp2.value.length > 0 && AddPhoneInp2.value.length > 0 && AddEmailInp2.value.includes("@")){
+                axios.get(url + "/" + id).then(({data}) =>{
                 
                 
-                let newARR = {
-                    username: AddUserInp2.value,
-                            surname: AddSurNameInp2.value,
-                            email: AddEmailInp2.value,
-                            phone: AddPhoneInp2.value,
-                }
-                
-                axios.patch(url + "/" + id,newARR).then((element) =>{
+                    let newARR = {
+                        username: AddUserInp2.value,
+                                surname: AddSurNameInp2.value,
+                                email: AddEmailInp2.value,
+                                phone: AddPhoneInp2.value,
+                    }
                     
-                    console.log(element);
+                    axios.patch(url + "/" + id,newARR).then((element) =>{
+                        
+                        console.log(element);
+                        
+                        showData(url,id)
+                    })
                     
-                    showData(url,id)
                 })
-            })
-            ShowBoxs2.innerHTML = ""
+                ShowBoxs2.innerHTML = ""
+            }else{
+                alert("lutfen formu duzgun doldurun")
+            }
+            
         })
     
     const CloseBtn = document.querySelector("#CloseBtn")
