@@ -28,29 +28,90 @@ showData(ENDPOINT)
 
 
 const EditShow = (url,id) =>{
-    axios.get(url + "/" + id).then(({data}) =>{
-        
-        const newUser = prompt("user deyisdirmek",data.username)
-        let newARR = {
-            username:newUser
-        }
-        axios.patch(url + "/" + id,newARR).then((element) =>{
+    const ShowBoxs2 = document.querySelector("#ShowBoxs2")
+    users.innerHTML = ""
+        ShowBoxs2.innerHTML += `<div class="ShowBox2">
+        <i class="fa-solid fa-xmark" id="CloseBtn"></i>
+            <form method="get">
             
-            console.log(element);
+                <input type="text" placeholder="adinizi yazin" id="AddUserInp2">
+                <input type="text" placeholder="soyadiniz yazin" id="AddSurNameInp2">
+                <input type="text" placeholder="email yazin" id="AddEmailInp2">
+                <input type="number" placeholder="telefon yazin" id="AddPhoneInp2">
+    
+                <input type="submit" id="AddSubmitInput2">
+            </form>
+        </div>`
+        const AddEmailInp2 = document.querySelector("#AddEmailInp2")
+        const AddUserInp2 = document.querySelector("#AddUserInp2")
+        const AddSurNameInp2 = document.querySelector("#AddSurNameInp2")
+        const AddPhoneInp2 = document.querySelector("#AddPhoneInp2")
+        const AddSubmitInput2 = document.querySelector("#AddSubmitInput2")
+        axios.get(url + "/" + id).then(({data}) =>{
+            AddUserInp2.value = data.username
+            AddSurNameInp2.value = data.surname
+            AddEmailInp2.value = data.email
+            AddPhoneInp2.value = data.phone
             
-            showData(url,id)
+            
         })
+        
+        AddSubmitInput2.addEventListener("click",(e) =>{
+            e.preventDefault()
+            axios.get(url + "/" + id).then(({data}) =>{
+                
+                
+                let newARR = {
+                    username: AddUserInp2.value,
+                            surname: AddSurNameInp2.value,
+                            email: AddEmailInp2.value,
+                            phone: AddPhoneInp2.value,
+                }
+                
+                axios.patch(url + "/" + id,newARR).then((element) =>{
+                    
+                    console.log(element);
+                    
+                    showData(url,id)
+                })
+            })
+            ShowBoxs2.innerHTML = ""
+        })
+    
+    const CloseBtn = document.querySelector("#CloseBtn")
+    CloseBtn.addEventListener("click",() =>{
+        ShowBoxs2.innerHTML = ""
+        showData(ENDPOINT)
     })
+    
     
 }
 
 
 
 const DeleteShow = (url,id) =>{
-  axios.delete(url + "/" + id).then((element) =>{
-    showData(ENDPOINT)
-    
-  })
+  
+    Swal.fire({
+        title: "Əminsinizmi?",
+        text: "Bunu geri qaytara bilməyəcəksiniz!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Bəli, silinsin!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.delete(url + "/" + id).then((element) => {
+            showData(ENDPOINT);
+          });
+      
+          Swal.fire({
+            title: "Silindi!",
+            text: "Faylınız silindi.",
+            icon: "success"
+          });
+        }
+      });
   
 }
 const ShowBoxs = document.querySelector("#ShowBoxs")
@@ -77,13 +138,50 @@ cardBtn.addEventListener('click',() =>{
        const AddSubmitInput = document.querySelector("#AddSubmitInput")
        AddSubmitInput.addEventListener('click',(e) =>{
         e.preventDefault()
-        let newArr = {
-            username:AddUserInp.value,
-            surname:AddSurNameInp.value,
-            email:AddEmailInp.value,
-            phone:AddPhoneInp.value,
+        if(AddUserInp.value.length > 0 && AddSurNameInp.value.length > 0 && AddEmailInp.value.length > 0 && AddPhoneInp.value.length > 0 && AddEmailInp.value.includes("@")){
+            Swal.fire({
+                title: "Yeni istifadəçi əlavə edəkmi?",
+                text: "Yeni istifadəçi əlavə olunsunmu?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Bəli"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  let newArr = {
+                    username: AddUserInp.value,
+                    surname: AddSurNameInp.value,
+                    email: AddEmailInp.value,
+                    phone: AddPhoneInp.value,
+                  };
+              
+                  axios.post(ENDPOINT, newArr).then((element) => {
+                      ShowBoxs.innerHTML = "";
+                      showData(ENDPOINT);
+                      cardBtn.innerText = "elave et";
+                  });
+              
+                  Swal.fire({
+                    title: "Yeni istifadəçi əlavə olundu",
+                    text: "Yeni istifadəçi əlavə olundu",
+                    icon: "success"
+                    
+                  });
+                  
+                }
+              });
+              
+            
+            
+            
+        }else{
+            alert("form duzgun doldurun")
+            
         }
-            console.log(newArr);
+        
+           
+            
             
        })
        
