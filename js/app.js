@@ -1,5 +1,5 @@
 const users = document.querySelector("#users")
-const ENDPOINT = "http://localhost:3001/users"
+const ENDPOINT = "http://localhost:3000/users"
 const cardBtn = document.querySelector("#cartBtn")
 const showData = (url) =>{
     users.innerHTML = ""
@@ -48,6 +48,7 @@ const EditShow = (url,id) =>{
         const AddPhoneInp2 = document.querySelector("#AddPhoneInp2")
         const AddSubmitInput2 = document.querySelector("#AddSubmitInput2")
         axios.get(url + "/" + id).then(({data}) =>{
+          
             AddUserInp2.value = data.username
             AddSurNameInp2.value = data.surname
             AddEmailInp2.value = data.email
